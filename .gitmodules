@@ -1,9 +1,11 @@
 [submodule "modules/ommr4all-server"]
 	path = modules/ommr4all-server
 	url = ../ommr4all-server.git
+	branch = master
 [submodule "modules/ommr4all-client"]
 	path = modules/ommr4all-client
 	url = ../ommr4all-client.git
+	branch = master
 [submodule "modules/ommr4all-line-detection"]
 	path = modules/ommr4all-line-detection
 	url = ../ommr4all-line-detection.git
