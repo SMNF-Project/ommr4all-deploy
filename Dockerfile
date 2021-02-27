@@ -9,11 +9,16 @@ EXPOSE 8001
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     locales \
-    git \
     wget curl gnupg \
     python3-pip virtualenv libsm6 libxrender1 libfontconfig1 \
     apache2 libapache2-mod-wsgi-py3 \
     && rm -rf /var/lib/apt/lists/*
+
+# We need to install a more recent version of git to get necessary submodule functionality
+RUN apt-get install -y software-properties-common
+RUN apt-add-repository -y ppa:git-core/ppa
+RUN apt-get install -y git
+
 
 # install latest node
 RUN curl -sL https://deb.nodesource.com/setup_12.x  | bash - && apt-get -y install nodejs
@@ -33,8 +38,15 @@ RUN git clone --recursive http://github.com/hajicj/ommr4all-deploy
 # setup apache
 RUN cp ommr4all-deploy/ommr4all-deploy/deploy/apache2.conf /etc/apache2/sites-available/ommr4all.conf && a2ensite ommr4all.conf && apachectl configtest
 
-# run deploy script
-RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --dbdir /opt/ommr4all/storage
+# run deploy script steps
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --client --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --venv --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --server --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --submodules --submodules_bleedingedge --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --calamari --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --serversettings --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --staticfiles --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --migrations --dbdir /opt/ommr4all/storage
 
 # launch apache
 CMD apachectl -D FOREGROUND
