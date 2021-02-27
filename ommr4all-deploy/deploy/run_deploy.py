@@ -51,14 +51,19 @@ def main():
     print("\n\n\n======== run_deploy.py: Installing ommr4all-server requirements ====", file=sys.stderr)
     check_call([pip, 'install', '-r', 'modules/ommr4all-server/requirements.txt'])
 
-    for submodule in ['ommr4all-page-segmentation', 'ommr4all-line-detection', 'ommr4all-layout-analysis', 'calamari']:
 
-        print("\n\n\n======== run_deploy.py: Installing submodule {} ====", submodule, file=sys.stderr)
+    for submodule in ['ommr4all-page-segmentation', 'ommr4all-line-detection', 'ommr4all-layout-analysis']:
+        print("\n\n\n======== run_deploy.py: Installing submodule {} ====".format(submodule), file=sys.stderr)
         os.chdir('modules/' + submodule)
         check_call(['git', 'pull', 'origin', 'master'])
         check_call(['git', 'checkout', 'master'])
         check_call([python, 'setup.py', 'install'])
         os.chdir(root_dir)
+
+    # Install calamari without git pull
+    os.chdir('modules/calamari')
+    check_call([python, 'setup.py', 'install'])
+    os.chdir(root_dir)
 
     os.chdir(root_dir)
     os.makedirs(storage_dir, exist_ok=True)
