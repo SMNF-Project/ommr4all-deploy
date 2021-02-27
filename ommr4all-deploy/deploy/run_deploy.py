@@ -55,6 +55,7 @@ def main():
 
         print("\n\n\n======== run_deploy.py: Installing submodule {} ====", submodule, file=sys.stderr)
         os.chdir('modules/' + submodule)
+        check_call(['git', 'pull'])
         check_call([python, 'setup.py', 'install'])
         os.chdir(root_dir)
 
