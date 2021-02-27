@@ -35,7 +35,7 @@ def main():
     check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
     check_call(['npm', 'install'])
     check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
-    for config in ['production']:  # Temporarily removed German version from build while debugging, since i18n clutters logs
+    for config in ['production', 'production-de']:
         check_call(['ng', 'build', '--configuration', config])
 
     print("\n\n\n\n\n============= run_deploy.py: setting up virtual environment and dependencies =========\n\n\n", file=sys.stderr)
