@@ -9,16 +9,17 @@ EXPOSE 8001
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     locales \
+    git \
     wget curl gnupg \
     python3-pip virtualenv libsm6 libxrender1 libfontconfig1 \
     apache2 libapache2-mod-wsgi-py3 \
     && rm -rf /var/lib/apt/lists/*
 
-# We need to install a more recent version of git to get necessary submodule functionality
-RUN apt-get install -y software-properties-common
-RUN apt-add-repository -y ppa:git-core/ppa
-RUN apt-get install -y git
-
+# WHen git pull is added to run_deploy.py, --remote-submodules is no longer needed
+## Install recent version of git that supports --remote-submodules
+#RUN apt-get update && apt-get install -y software-properties-common
+#RUN apt-add-repository -y ppa:git-core/ppa
+#RUN apt-get install -y git
 
 # install latest node
 RUN curl -sL https://deb.nodesource.com/setup_12.x  | bash - && apt-get -y install nodejs
@@ -32,7 +33,9 @@ RUN npm install npm@latest -g && npm install -g @angular/cli
 # basic dirs
 RUN mkdir -p /opt
 
-# clone code and all its dependencies
+# Disable cache for git clone
+RUN echo "busting cache again 5"
+# clone code and all its dependencies. Trying without --remote-submodules.
 RUN git clone --recursive http://github.com/hajicj/ommr4all-deploy
 
 # setup apache
