@@ -29,19 +29,31 @@ def main():
 
     os.chdir(root_dir)
 
+    print("\n\n\n======== run_deploy.py: Setting up client ====", file=sys.stderr)
     logger.info("Setting up client")
     os.chdir('modules/ommr4all-client')
     check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
     check_call(['npm', 'install'])
     check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
-    for config in ['production', 'production-de']:
+    for config in ['production']:  # Temporarily removed German version from build while debugging, since i18n clutters logs
         check_call(['ng', 'build', '--configuration', config])
 
+    print("\n\n\n\n\n============= run_deploy.py: setting up virtual environment and dependencies =========\n\n\n", file=sys.stderr)
     logger.info("Setting up virtual environment and dependencies")
     os.chdir(root_dir)
+
+    print("\n\n\n======== run_deploy.py: Installing tensorflow ====", file=sys.stderr)
+    # There is impending dependency hell when absl-py is not manually set to lower version
+    check_call([pip, 'install', 'absl-py<0.11,>=0.9'])
+
     check_call([pip, 'install', 'tensorflow_gpu>=2.0' if args.gpu else 'tensorflow>=2.0'])
+
+    print("\n\n\n======== run_deploy.py: Installing ommr4all-server requirements ====", file=sys.stderr)
     check_call([pip, 'install', '-r', 'modules/ommr4all-server/requirements.txt'])
+
     for submodule in ['ommr4all-page-segmentation', 'ommr4all-line-detection', 'ommr4all-layout-analysis', 'calamari']:
+
+        print("\n\n\n======== run_deploy.py: Installing submodule {} ====", submodule, file=sys.stderr)
         os.chdir('modules/' + submodule)
         check_call([python, 'setup.py', 'install'])
         os.chdir(root_dir)
@@ -49,6 +61,7 @@ def main():
     os.chdir(root_dir)
     os.makedirs(storage_dir, exist_ok=True)
 
+    print("\n\n\n\n\n============= run_deploy.py: changing server settings =========\n\n\n", file=sys.stderr)
     logger.info("Changing server settings")
     os.chdir('modules/ommr4all-server')
 
@@ -73,9 +86,11 @@ def main():
     with open('ommr4all/settings.py', 'w') as f:
         f.write(settings)
 
+    print("\n\n\n\n\n============= run_deploy.py: Collecting static files =========\n\n\n", file=sys.stderr)
     logger.info("Collecting static files")
     check_call([python, 'manage.py', 'collectstatic', '--noinput'])
 
+    print("\n\n\n\n\n============= run_deploy.py: Migrating database and copying new version =========\n\n\n", file=sys.stderr)
     logger.info("Migrating database and copying new version")
     call(['/usr/sbin/service', 'apache2', 'stop'])
 
