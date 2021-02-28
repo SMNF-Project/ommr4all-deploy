@@ -115,17 +115,22 @@ def main():
 
         with open('ommr4all/settings.py', 'w') as f:
             f.write(settings)
+        os.chdir(root_dir)
 
 
     if args.staticfiles:
         print("\n\n\n\n\n============= run_deploy.py: Collecting static files =========\n\n\n", file=sys.stderr)
         logger.info("Collecting static files")
+        os.chdir('modules/ommr4all-server')
         check_call([python, 'manage.py', 'collectstatic', '--noinput'])
+        os.chdir(root_dir)
 
 
     if args.migrations:
         print("\n\n\n\n\n============= run_deploy.py: Migrating database and copying new version =========\n\n\n", file=sys.stderr)
         logger.info("Migrating database and copying new version")
+        os.chdir('modules/ommr4all-server')
+
         call(['/usr/sbin/service', 'apache2', 'stop'])
 
         # backup files
@@ -144,6 +149,7 @@ def main():
         # finally restart the service
         call(['/usr/sbin/service', 'apache2', 'start'])
         logger.info("Setup finished")
+        os.chdir(root_dir)
 
 
 if __name__ == "__main__":
