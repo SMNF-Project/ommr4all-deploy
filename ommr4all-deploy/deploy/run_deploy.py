@@ -65,7 +65,12 @@ def main():
 
     if args.server:
         print("\n\n\n======== run_deploy.py: Installing ommr4all-server requirements ====", file=sys.stderr)
-        check_call([pip, 'install', '-r', 'modules/ommr4all-server/requirements.txt'])
+        os.chdir('modules/ommr4all-server')
+        if args.submodules_bleedingedge:
+            check_call(['git', 'pull', 'origin', 'master'])
+            check_call(['git', 'checkout', 'master'])
+        check_call([pip, 'install', '-r', 'requirements.txt'])
+        os.chdir(root_dir)
 
 
     if args.submodules:
