@@ -47,7 +47,9 @@ def main():
         if args.submodules_bleedingedge:
             check_call(['git', 'config', 'user.email', 'docker@digimus.cz'])
             check_call(['git', 'config', 'user.name', "docker"])
-            check_call(['git', 'pull', 'origin', 'master'])
+            check_call(['git', 'fetch'])
+            check_call(['git', 'reset', '--hard', 'origin/master'])
+            # check_call(['git', 'pull', 'origin', 'master'])
             check_call(['git', 'checkout', 'master'])
 
         check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
