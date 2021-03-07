@@ -45,6 +45,8 @@ def main():
         logger.info("Setting up client")
         os.chdir('modules/ommr4all-client')
         if args.submodules_bleedingedge:
+            check_call(['git', 'config', 'user.email', 'docker@digimus.cz'])
+            check_call(['git', 'config', 'user.name', "docker"])
             check_call(['git', 'pull', 'origin', 'master'])
             check_call(['git', 'checkout', 'master'])
 
@@ -53,6 +55,7 @@ def main():
         check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
         for config in ['production', 'production-de']:
             check_call(['ng', 'build', '--configuration', config])
+        os.chdir(root_dir)
 
 
     if args.venv:
@@ -71,6 +74,8 @@ def main():
         print("\n\n\n======== run_deploy.py: Installing ommr4all-server requirements ====", file=sys.stderr)
         os.chdir('modules/ommr4all-server')
         if args.submodules_bleedingedge:
+            check_call(['git', 'config', 'user.email', 'docker@digimus.cz'])
+            check_call(['git', 'config', 'user.name', "docker"])
             check_call(['git', 'pull', 'origin', 'master'])
             check_call(['git', 'checkout', 'master'])
         check_call([pip, 'install', '-r', 'requirements.txt'])
@@ -82,6 +87,8 @@ def main():
             print("\n\n\n======== run_deploy.py: Installing submodule {} ====".format(submodule), file=sys.stderr)
             os.chdir('modules/' + submodule)
             if args.submodules_bleedingedge:
+                check_call(['git', 'config', 'user.email', 'docker@digimus.cz'])
+                check_call(['git', 'config', 'user.name', "docker"])
                 check_call(['git', 'pull', 'origin', 'master'])
                 check_call(['git', 'checkout', 'master'])
             check_call([python, 'setup.py', 'install'])
