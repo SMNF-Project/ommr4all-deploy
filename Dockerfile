@@ -42,7 +42,7 @@ RUN git clone --recursive http://github.com/hajicj/ommr4all-deploy
 RUN cp ommr4all-deploy/ommr4all-deploy/deploy/apache2.conf /etc/apache2/sites-available/ommr4all.conf && a2ensite ommr4all.conf && apachectl configtest
 
 # run deploy script steps
-RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --client --dbdir /opt/ommr4all/storage
+RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --client --submodules_bleedingedge --dbdir /opt/ommr4all/storage
 RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --venv --dbdir /opt/ommr4all/storage
 RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --server --submodules_bleedingedge --dbdir /opt/ommr4all/storage
 RUN cd ommr4all-deploy && python3 ommr4all-deploy/deploy.py --submodules --submodules_bleedingedge --dbdir /opt/ommr4all/storage

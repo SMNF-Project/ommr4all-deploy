@@ -44,6 +44,10 @@ def main():
         print("\n\n\n======== run_deploy.py: Setting up client ====", file=sys.stderr)
         logger.info("Setting up client")
         os.chdir('modules/ommr4all-client')
+        if args.submodules_bleedingedge:
+            check_call(['git', 'pull', 'origin', 'master'])
+            check_call(['git', 'checkout', 'master'])
+
         check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
         check_call(['npm', 'install'])
         check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
