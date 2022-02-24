@@ -54,7 +54,7 @@ def main():
 
         check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
         check_call(['npm', 'install'])
-        check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
+        # check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
         for config in ['production', 'production-de']:
             check_call(['ng', 'build', '--configuration', config])
         os.chdir(root_dir)
