@@ -54,7 +54,7 @@ def main():
 
         check_call(['sed', '-i', '-e', 's#routerLink="/imprint"#href="https://www.uni-wuerzburg.de/en/sonstiges/imprint-privacy-policy/"#g', 'src/app/app.component.html'])
         check_call(['npm', 'install'])
-        check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
+        # check_call(['npm', 'audit', 'fix', '--audit-level', 'high'])
         for config in ['production', 'production-de']:
             check_call(['ng', 'build', '--configuration', config])
         os.chdir(root_dir)
@@ -91,6 +91,7 @@ def main():
             print("\n\n\n======== run_deploy.py: Installing submodule {} ====".format(submodule), file=sys.stderr)
             os.chdir('modules/' + submodule)
             if args.submodules_bleedingedge:
+                print('Submodule {} bleedingedge: git operations === '.format(submodule), file=sys.stderr)
                 check_call(['git', 'config', 'user.email', 'docker@digimus.cz'])
                 check_call(['git', 'config', 'user.name', "docker"])
                 check_call(['git', 'pull', 'origin', 'master'])

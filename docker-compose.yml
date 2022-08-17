@@ -4,9 +4,9 @@ services:
     image: uniwue/ommr4all
     build: .
     ports:
-      - "${PORT}:8001"
+      - "80:8001"
     volumes:
-      - ${STORAGE}:/opt/ommr4all/storage
+      - /opt/ommr4all/storage:/opt/ommr4all/storage
     depends_on:
       - migration
   migration:
@@ -14,4 +14,4 @@ services:
     build: .
     command: /opt/ommr4all/ommr4all-deploy-venv/bin/python /opt/ommr4all/ommr4all-deploy/modules/ommr4all-server/manage.py migrate --noinput
     volumes:
-      - ${STORAGE}:/opt/ommr4all/storage
+      - /opt/ommr4all/storage:/opt/ommr4all/storage
