@@ -36,7 +36,7 @@ RUN mkdir -p /opt
 # Disable cache for git clone
 RUN echo "busting cache again 5"
 # clone code and all its dependencies. Trying without --remote-submodules.
-RUN git clone --recursive http://github.com/hajicj/ommr4all-deploy
+RUN git clone --recursive http://github.com/SMNF-project/ommr4all-deploy
 
 # setup apache
 RUN cp ommr4all-deploy/ommr4all-deploy/deploy/apache2.conf /etc/apache2/sites-available/ommr4all.conf && a2ensite ommr4all.conf && apachectl configtest
